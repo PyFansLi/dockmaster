@@ -6,11 +6,6 @@ from lib.Dockerlib import DOCKER
 from lib import Standardlib
 from api.functions import *
 
-@app.route('/')
-@app.route('/index')
-def index():
-    return "hello"
-
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     error = None
@@ -35,6 +30,7 @@ def logout():
         None
     return redirect('/login')
 
+@app.route('/')
 @app.route('/overview')
 def overview():
     if session.get('login_in',None):
