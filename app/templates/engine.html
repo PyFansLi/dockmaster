@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block head %}
+<link href={{url_for('static', filename='css/app.css')}} media="screen, projector, print" rel="stylesheet" type="text/css">
+<link href={{url_for('static',filename='css/pizza.css')}} media="screen, projector, print" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block body %}
+<h2 class="page-header">主机</h2>
+<ul class="nav nav-tabs">
+    <li>
+        <a href="http://github.com/lioncui" target="view_window">
+            <span class="glyphicon glyphicon-home"></span> Github
+        </a>
+    </li>
+    <li>
+        <a href="{{url_for('overview')}}">
+            <span class="glyphicon glyphicon-folder-open"></span> 总览
+        </a>
+    </li>
+    <li class="active">
+        <a>
+            <span class="glyphicon glyphicon-tasks"></span> 主机
+        </a>
+    </li>
+    <li>
+        <a href="{{url_for('image')}}">
+            <span class="glyphicon glyphicon-file"></span> 镜像
+        </a>
+    </li>
+    <li>
+        <a href="{{url_for('container')}}">
+            <span class="glyphicon glyphicon-inbox"></span> 容器
+        </a>
+    </li>
+    <li>
+    <li style="float:right">
+        <a href="{{url_for('logout')}}">
+            <span class="glyphicon glyphicon-log-out"></span> 注销
+        </a>
+    <li>
+    <li style="float:right">
+        <a href="#" onclick="location.reload()">
+            <span class="glyphicon glyphicon-refresh"></span> 刷新
+        </a>
+    <li>
+</ul>
+<h3 class="page-header" style="background: #ecf0f1">
+    <span class="glyphicon glyphicon-tags" style="color: #3498db"></span> 容器概览
+</h3>
+<div class="row">
+    <div class="col-xs-4">
+        <div style="margin-left: 80px;margin-right: 80px;border: 3px solid #ccc;border-radius: 25px 25px 25px 25px;background-color:#1abc9c">
+        <h1 class="page-header" style="text-align:center;font-family:Mircofsoft YaHei UI;color:white">
+            <span class="glyphicon glyphicon-inbox" style="color:#34495e;top:6px"></span> <strong>容器</strong>
+        </h1>
+        <p style="font-size:60px;text-align:center;color:#34495e" >
+            {{usage["containers_all"]}}
+        </p>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div style="margin-left: 80px;margin-right: 80px;border: 3px solid #ccc;border-radius: 25px 25px 25px 25px;background-color:#1abc9c">
+        <h1 class="page-header" style="text-align:center;font-family:Mircofsoft YaHei UI;color:white">
+            <span class="glyphicon glyphicon-random" style="color:#34495e;top:6px"></span> <strong>运行中</strong>
+        </h1>        
+        <p style="font-size:60px;text-align:center;color:#34495e">
+            {{usage["containers"]}}
+        </p>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div style="margin-left: 80px;margin-right: 80px;border: 3px solid #ccc;border-radius: 25px 25px 25px 25px;background-color:#1abc9c">
+        <h1 class="page-header" style="text-align:center;font-family:Mircofsoft YaHei UI;color:white">
+            <span class="glyphicon glyphicon-file" style="color:#34495e;top:6px"></span> <strong>镜像</strong>
+        </h1> 
+        <p style="font-size:60px;text-align:center;color:#34495e">
+            {{usage["images"]}}
+        </p>
+        </div>
+    </div>
+</div>
+<h3 class="page-header" style="background: #ecf0f1">
+    <span class="glyphicon glyphicon-tags" style="color: #3498db"></span> 资源使用
+</h3>
+<h4 class="col-xs-12" style="border:2px solid #FF69B4;border-radius:5px 5px 5px;background:#FFB6C1;">
+        没有相应的API支持,暂时无法直接获取主机的CPU和内存的使用情况       
+</h4>
+<div class="row">
+    <div style="text-align:center">
+    <div class="col-xs-4">
+        <h3 class="page-header">
+            存储使用率
+        </h3>
+        <ul data-pie-id="svg1" data-options='{"donut":"true"}'>
+            <li data-value="{{usage.store_rate.used}}">已使用:{{usage.store_rate.used}} GB</li>
+            <li data-value="{{usage.store_rate.free}}">剩余:{{usage.store_rate.free}} GB</li>
+        </ul>
+        <div class="large-6 small-8" style="margin-left: 70px;">
+            <div id="svg1"></div>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <h3 class="page-header">
+            CPU使用率
+        </h3>
+        <ul data-pie-id="svg2" data-options='{"donut":"true"}'>
+            <li data-value="999">无法获取</li>
+            <li data-value="1"></li>
+        </ul>
+        <div class="large-6 small-8" style="margin-left: 70px;">
+            <div id="svg2"></div>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <h3 class="page-header">
+            内存使用率
+        </h3>
+        <ul data-pie-id="svg3" data-options='{"donut":"true"}'>
+            <li data-value="999">无法获取</li>
+            <li data-value="1"></li>
+        </ul>
+        <div class="large-6 small-8" style="margin-left: 70px;">
+            <div id="svg3"></div>
+        </div>
+    </div>
+    </div>
+</div>
+<h2 class="page-header"></h2>
+<div style="padding-top:20px;padding-bottom:20px">
+<h3 class="page-header" style="background: #ecf0f1">
+    <span class="glyphicon glyphicon-tags" style="color: #3498db"></span> 主机信息
+</h3>
+<table class="table table-striped table-bordered">
+<thead>  
+    <tr>  
+    <th>Name</th>
+    <th>Version</th>
+    <th>Kernel</th>
+    <th>System</th>
+    <th>Ncpu</th>
+    <th>Memory</th>
+    <th>Store</th>
+    <th>Driver</th>
+    <th>IPv4Forwarding</th>
+    <th>OomKillDisable</th>
+    </tr>  
+</thead>
+<tbody>
+    <td>{{host_info['Name']}}</td>
+    <td>{{host_info['ServerVersion']}}</td>
+    <td>{{host_info['KernelVersion']}}</td>
+    <td>{{host_info['OperatingSystem']}}</td>
+    <td>{{host_info['NCPU']}}</td>
+    <td>{{host_info['MemTotal']}}</td>
+    <td>{{host_info['Data Space Total']}}</td>
+    <td>{{host_info['Driver']}}</td>
+    <td>{{host_info['IPv4Forwarding']}}</td>
+    <td>{{host_info['OomKillDisable']}}</td>
+</tbody>
+</table>
+{% endblock %}
+{% block script %}
+<script src={{url_for('static', filename='js/snap.svg.js')}}></script>
+<script src={{url_for('static', filename='js/pizza.js')}}></script>
+<script type="text/javascript">
+    $(window).load(function() {
+        Pizza.init();
+    })
+</script>
+{% endblock %}

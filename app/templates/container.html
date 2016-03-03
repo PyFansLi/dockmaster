@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block body %}
+<h2 class="page-header">容器</h2>
+<ul class="nav nav-tabs">
+    <li>
+        <a href="http://github.com/lioncui" target="view_window">
+            <span class="glyphicon glyphicon-home"></span> Github
+        </a>
+    </li>
+    <li>
+        <a href="{{url_for('overview')}}">
+            <span class="glyphicon glyphicon-folder-open"></span> 总览
+        </a>
+    </li>
+    <li>
+        <a href="{{url_for('engine')}}">
+            <span class="glyphicon glyphicon-tasks"></span> 主机
+        </a>
+    </li>
+    <li>
+        <a href="{{url_for('image')}}">
+            <span class="glyphicon glyphicon-file"></span> 镜像
+        </a>
+    </li>
+    <li class="active">
+        <a href="#">
+            <span class="glyphicon glyphicon-inbox"></span> 容器
+        </a>
+    </li>
+    <li>
+    <li style="float:right">
+        <a href="{{url_for('logout')}}">
+            <span class="glyphicon glyphicon-log-out"></span> 注销
+        </a>
+    <li>
+    <li style="float:right">
+        <a href="#" onclick="location.reload()">
+            <span class="glyphicon glyphicon-refresh"></span> 刷新
+        </a>
+    <li>
+</ul>
+<div style="padding-top:20px;">
+    <button class="hide" data-toggle="modal" data-target="#action_select"></button>
+    <table class="table table-striped table-bordered">
+    <thead>
+        <tr>  
+            <th>NAME</th>
+            <th>IMAGE</th>
+            <th>ID</th>
+            <th>CREATED</th>
+            <th>STATUS</th>
+            <th>Label</th>
+            <th>OPTION</th>
+        </tr> 
+    </thead>
+    <tbody>
+        {% for container in container_list %}
+        <tr>
+            <td>{{container.name}}</td>
+            <td>{{container.image}}</td>
+            <td>{{container.id}}</td>
+            <td>{{container.created}}</td>
+            <td>{{container.status}}</td>
+            {% if 'Up' in container.status and 'Paused' not in container.status %}
+            <td>
+                <span class="glyphicon glyphicon-circle-arrow-up" style="color:#2ecc71"></span>
+            </td>
+            {% elif 'Exited' in container.status %}
+            <td>
+                <span class="glyphicon glyphicon-stop" style="color:#e74c3c"></span>
+            </td>
+            {% elif 'Paused' in container.status %}   
+            <td><span class="glyphicon glyphicon-pause" style="color:#f1c40f"></span>
+            </td>
+            {% elif 'Created' in container.status %}
+            <td><span class="glyphicon glyphicon-signal" style="color:#f39c12"></span>
+            </td>
+            {% endif %}
+            <td>
+                <button type='button' class="btn btn-info btn-xs" data-toggle="modal" data-target="#detail">
+                    信息
+                </button>
+                <!--button class="btn dropdown-toggle btn-xs">
+                    <span class="glyphicon glyphicon-wrench"></span>
+                </button-->
+                <div class="btn-group">
+                   <button class="btn btn-default dropdown-toggle btn-xs" 
+                      data-toggle="dropdown">
+                      <span class="glyphicon glyphicon-wrench"></span>
+                   </button>
+                   <ul class="dropdown-menu" role="menu" style="min-width:60px">
+                      <li><a href="#" value="boot">启动</a></li>
+                      <li><a href="#" value="stop">停止</a></li>
+                      <li><a href="#" value="reboot">重启</a></li>
+                      <li><a href="#" value="pause">挂起</a></li>
+                      <li><a href="#" value="unpause">解挂</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#" value="delete">删除</a></li>
+                   </ul>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="detail" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h3 class="modal-title" id="myModal">
+                详细信息
+            </h3>
+            </div>
+            <div class="modal-body">
+            <ul id="show">
+            </ul>
+            </div>
+            </div>
+        </div>
+    </div>
+</div><!-- /.modal -->
+<div class="modal fade" id="action_select" tabindex="-1" role="dialog" aria-labelledby="myModal2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModal2">
+                    容器操作
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form role="form" action="{{url_for('_container_action')}}" method="GET">
+                    <div class="text" style=" text-align:center;">
+                    <h4 id="que"></h4>
+                    </br>
+                    <input type='hidden' name='id' id="id">
+                    <input type='hidden' name="action" id="action">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value='关闭'/>
+                    <button type='submit' class="btn btn-primary"/>确定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    ;$(function(){
+        $("table").DataTable();
+        $("tbody>tr>td>button").click(function(){
+            var id = $(this).parents("tr").children("td:nth-child(3)").text();
+            var wait = "<h1 style='text-align: center;color:#ecf0f1;'><span class='glyphicon glyphicon-stats'></span>获取详细信息</h1>"
+            $("#show").html(wait);
+            $.get("{{url_for('_container_detail')}}", {'id':id}, function(data){
+                $("#show").html(data.result)
+            });
+        });
+
+        $(".dropdown-menu li>a").click(function(){
+            var action = $(this).attr("value");
+            var action_zh = $(this).text()
+            var id = $(this).parents("tr").children("td:nth-child(3)").text();
+            $("#que").text("是否需要"+ action_zh + "容器 " + id)
+            $("#id").val(id)
+            $("#action").val(action)
+            $(".hide").click()
+        });
+    });
+</script>
+{% endblock %}

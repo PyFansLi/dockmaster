@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DockMaster</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href={{url_for('static', filename='css/bootstrap.min.css')}} rel="stylesheet" media="screen">
+</head>
+<body style="background-color:#1abc9c;background-repeat:no-repeat ;background-size:100% 100%;background-attachment: fixed;">
+<div class="container">
+<div style="margin:0 auto;padding:15px;max-width: 330px;border: 1px solid #ccc;top:50%;margin-top: 100px;background-color:white;background:#ecf0f1;border-radius: 10px 10px 10px 10px">
+    <form class="form-signin" action="{{url_for('login')}}" method="POST">
+        <!--h2 class="form-signin-heading" sytle="font-family:Mircosoft YaHei">Login Please</h2-->
+        <div class="input-group">
+          <label for="inputUsername" class="sr-only">Username</label>
+          <input name="username" id="inputUsername" class="form-control" autocomplete="off" placeholder="Username" required autofocus>
+          <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+        </div>
+        </br>
+        <div class="input-group">
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" name="password" id="inputPassword" style="height;" class="form-control" autocomplete="off" placeholder="Password" required>
+          <span class="input-group-addon"><span class="glyphicon glyphicon-credit-card"></span></span>
+        </div>
+        {% if error %}
+        <p style="color:red">{{error}}</p>
+        {% else %}
+        <p></br></p>
+        {% endif%}
+        <button class="btn btn-lg btn-block" type="submit" style="background:#1abc9c;color: white">
+          登录
+        </button>
+        <button class="btn btn-lg btn-info btn-block" data-toggle="modal" data-target="#register" type="button">
+          注册
+        </button>
+    </form>
+</div>
+<div style="text-align: center;font-size: 150px">
+      <span class="glyphicon glyphicon-envelope" style="color:#34495e"></span>
+</div>
+<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+           <div class="modal-dialog">
+              <div class="modal-content">
+                 <div class="modal-header">
+                    <button type="button" class="close" 
+                       data-dismiss="modal" aria-hidden="true">
+                          &times;
+                    </button>
+                    <h3 class="modal-title" id="myModalLabel">
+                       注册用户
+                    </h3>
+                 </div>
+                 <div class="modal-body">
+                    <form class="form-horizontal" id="newuser" role="form">
+                       <div class="form-group">
+                          <label for="reg_username" class="col-sm-2 control-label">用户名</label>
+                          <div class="col-sm-10">
+                             <input type="text" id="reg_username" class="form-control" 
+                                placeholder="用户名" required autofocus>
+                          </div>
+                       </div>
+                       <div class="form-group">
+                          <label for="reg_password" class="col-sm-2 control-label">密码</label>
+                          <div class="col-sm-10">
+                             <input type="password" id="reg_password" class="form-control" 
+                                placeholder="密码" required autofocus>
+                          </div>
+                       </div>
+                       <div class="form-group">
+                          <label for="reg_password2" class="col-sm-2 control-label"></label>
+                          <div class="col-sm-10">
+                             <input type="password" id="reg_password2" class="form-control" 
+                                placeholder="请再次输入密码" required autofocus>
+                          </div>
+                       </div>
+                       <div class="form-group">
+                          <label for="reg_email" class="col-sm-2 control-label">Email</label>
+                          <div class="col-sm-10">
+                             <input type="email" id="reg_email" class="form-control"
+                                placeholder="Email地址" required autofocus>
+                          </div>
+                       </div>
+                       <div class="text" style=" text-align:center;">
+                        <h4 id="warning" style="color:red"></h4>
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value='关闭'/>
+                        <input type='button' id="submit" class="btn btn-primary" name='sure' value='确定' />
+                        </div>
+                    </form>
+                </div><!-- /.modal-body -->
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+</body>
+<script src={{ url_for('static', filename='js/jquery.js') }}></script>
+<script src={{ url_for('static', filename='js/bootstrap.js') }}></script>
+<script type="text/javascript">
+    ;$(function(){
+        $("#submit").click(function(){
+            var reg_username = $("#reg_username").val()
+            var reg_password = $("#reg_password").val();
+            var reg_password2 = $("#reg_password2").val();
+            var reg_email = $("#reg_email").val();
+            if(reg_password != reg_password2){
+                $("#warning").text('密码不一致,请重新输入')
+                return
+            }
+            else{
+                $("#warning").text(" ")
+            };
+            if(!reg_email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
+                alert("邮箱格式错误,请检查");
+                return
+            };
+            $.post("{{url_for('registry')}}", {"username":reg_username, "password":reg_password, "email":reg_email}, function(data){
+                if(data.result == "failed"){
+                    $("#warning").text('创建失败,请联系管理员')
+                }
+                else{
+                    $(".btn.btn-default").click()
+                };
+            });
+        });
+    });
+</script>
+</html>

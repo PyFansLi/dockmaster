@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="row">
+    <div class="col-xs-12">
+        <h2 class="page-header">主机</h2>
+        <ul class="nav nav-tabs">
+          <li>
+              <a href="http://github.com/lioncui" target="view_window">
+                  <span class="glyphicon glyphicon-home"></span> Github
+              </a>
+          </li>
+          <li class="active">
+              <a>
+                  <span class="glyphicon glyphicon-folder-open"></span> 总览
+              </a>
+          </li>
+          <li class="dropdown pull-right">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+              <span class="glyphicon glyphicon-user"></span>{{username}}<strong class="caret"></strong>
+            </a>
+            <ul class="dropdown-menu" style="min-width:60px">
+            <li>
+              <a href="#" id="chpasswd">
+                  修改密码<span class="glyphicon glyphicon-pencil" />
+              </a>
+              <button class="hidden" data-toggle="modal" data-target="#changepasswd"></button>
+            </li>
+            <li class="divider"></li>
+              <li>
+                <a href="{{url_for('logout')}}">
+                    退出登录<span class="glyphicon glyphicon-log-out"/>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li style="float:right">
+              <a href="#" onclick="location.reload()">
+                  <span class="glyphicon glyphicon-refresh"></span> 刷新
+              </a>
+          <li>
+        </ul>
+    </div>
+    <div class="col-xs-12" style="margin-top: 10px;margin-bottom: 10px;">
+        <button class="btn btn-default btn-primary" data-toggle="modal" data-target="#add">
+            <span class="glyphicon glyphicon-plus"></span>新增
+        </button>
+    </div>
+    <div class="col-xs-12">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                <th>STATUS</th>
+                <th>UUID</th>
+                <th>HOSTNAME</th>
+                <th>ADDRESS</th>
+                <th>PORT</th>
+                <th>TIMESTAMP</th>
+                <th>USERNAME</th>
+                <th>OPTION</th>
+                </tr>
+            <thead>
+            <tbody>
+                {% for host in hostlist %}
+                <tr>
+                {% if host.status == 'OK' %}
+                <td><span class="glyphicon glyphicon-circle-arrow-up" style="color:#2ecc71"></span></td>
+                {% else %}
+                <td><span class="glyphicon glyphicon-circle-arrow-down" style="color:#e74c3c"></span></td>
+                {% endif %}
+                <td>{{host.uuid}}</td>
+                <td>{{host.hostname}}</td>
+                <td>{{host.host}}</td>
+                <td>{{host.port}}</td>
+                <td>{{host.timestamp}}</td>
+                <td>{{host.username}}</td>
+                <td>
+                    {% if host.status == 'OK' %}
+                    <button class="btn btn-xs btn-info" value="view">查看</button>
+                    {% else %}
+                    <button class="btn btn-xs btn-defualt" value="view" disabled="disabled">查看</button>
+                    {% endif %}
+                    <button class="btn btn-xs btn-danger" value="delete" >
+                      <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+           <div class="modal-dialog">
+              <div class="modal-content">
+                 <div class="modal-header">
+                    <button type="button" class="close" 
+                       data-dismiss="modal" aria-hidden="true">
+                          &times;
+                    </button>
+                    <h3 class="modal-title" id="myModalLabel">
+                       新增主机
+                    </h3>
+                 </div>
+                 <div class="modal-body">
+                    <form class="form-horizontal" method='POST' role="form" action={{url_for('_add_host')}}>
+                      <div class="form-group">
+                          <label for="hostname" class="col-sm-2 control-label">主机名</label>
+                          <div class="col-sm-6">
+                             <input type="text" id="hostname" class="form-control" placeholder="Hostname" name="hostname" required autofocus>
+                          </div>
+                       </div>
+                       <div class="form-group">
+                          <label for="host" class="col-sm-2 control-label">地址</label>
+                          <div class="col-sm-6">
+                             <input type="text" id="host" class="form-control" placeholder="IPAddress" name="host" required autofocus>
+                          </div>
+                       </div>
+                       <div class="form-group">
+                          <label for="port" class="col-sm-2 control-label">端口</label>
+                          <div class="col-sm-6">
+                             <input type="text" id="port" class="form-control" placeholder="Port" name="port" required autofocus>
+                          </div>
+                       </div>
+                       <h4 id="warning" style="color:red"></h4>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                               关闭
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                               提交
+                            </button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-body -->
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="changepasswd" tabindex="-1" role="dialog" aria-labelledby="myModal2" aria-hidden="true">
+       <div class="modal-dialog">
+          <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" 
+                   data-dismiss="modal" aria-hidden="true">
+                      &times;
+                </button>
+                <h3 class="modal-title" id="myModal2">
+                   修改密码
+                </h3>
+             </div>
+             <div class="modal-body">
+                <form class="form-horizontal" id="change" role="form">
+                   <div class="form-group">
+                      <label class="col-sm-2 control-label">用户名*</label>
+                      <div class="col-sm-10">
+                         <input type="text" class="form-control" value="{{username}}" readonly>
+                      </div>
+                   </div>
+                   <div class="form-group">
+                      <label for="oldpassword" class="col-sm-2 control-label">旧密码*</label>
+                      <div class="col-sm-10">
+                         <input type="password" id="oldpassword" class="form-control" autocomplete="off"
+                            placeholder="旧密码" required autofocus>
+                      </div>
+                   </div>
+                   <div class="form-group">
+                      <label for="newpassword" class="col-sm-2 control-label">新密码*</label>
+                      <div class="col-sm-10">
+                         <input type="password" id="newpassword" class="form-control" autocomplete="off"
+                            placeholder="新密码" required autofocus>
+                      </div>
+                   </div>
+                   <div class="form-group">
+                      <label for="newpassword2" class="col-sm-2 control-label"></label>
+                      <div class="col-sm-10">
+                         <input type="password" id="newpassword2" class="form-control" autocomplete="off"
+                            placeholder="请再次输入新密码" required autofocus>
+                      </div>
+                   </div>
+                   <div class="text" style=" text-align:center;">
+                    <h4 id="warning2" style="color:red"></h4>
+                    <button class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id="tttt" class="btn btn-primary">确定</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-body -->
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    ;$(function(){
+        $("table").DataTable();
+        $("tbody>tr>td>button").click(function(){
+            var action = $(this).val();
+            var uuid = $(this).parents("tr").children("td:nth-child(2)").text();
+            if(action == "view"){
+                window.location.href="{{url_for('engine')}}?uuid=" + uuid
+            }
+            else if(action == "delete"){
+                $.post("{{url_for('_del_host')}}",{"uuid":uuid},function(data){
+                  window.location.reload()
+                });
+            };
+        });
+
+        $("#chpasswd").click(function(){
+            $("#oldpassword").val("");
+            $("#newpassword").val("");
+            $("#newpassword2").val("");
+            $("#warning2").text("");
+            $(".hidden").click();
+        });
+
+        $("#tttt").click(function(){
+            var oldpassword = $("#oldpassword").val();
+            var newpassword = $("#newpassword").val();
+            var newpassword2 = $("#newpassword2").val();
+            if(newpassword != newpassword2){
+                $("#warning2").text('新密码不一致,请重新输入')
+                return
+            }
+            else{
+                $("#warning2").text(" ")
+            };
+
+            $.get("{{url_for('change_passwd')}}", {"oldpassword":oldpassword, "newpassword":newpassword}, function(data){
+                if(data.result == "change failed"){
+                    $("#warning2").text('修改失败密码,请确认已经输入正确密码')
+                }
+                else{
+                    $(".btn.btn-default").click()
+                };
+            });
+        });
+    });
+</script>
+{% endblock %}
