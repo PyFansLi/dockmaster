@@ -131,7 +131,10 @@ class DOCKER(Client):
         redata['ipaddress'] = detail['NetworkSettings']['IPAddress']
         redata['gateway'] = detail['NetworkSettings']['Gateway']
         redata['entrypoint'] = detail['Config']['Entrypoint']
-        redata['cmd'] =  "".join(detail['Config']['Cmd'])
+        if detail['Config']['Cmd']:
+            redata['cmd'] =  "".join(detail['Config']['Cmd'])
+        else:
+            redata['cmd'] = detail['Config']['Cmd']
         redata['status'] = detail['State']['Status']
         redata['pid'] = detail['State']['Pid']
 
