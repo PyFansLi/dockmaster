@@ -31,11 +31,15 @@ class DOCKER(Client):
     def get_images(self):
         imgs = self.images()
         image_list = []
+        data = []
         for i in imgs:
             for t in i['RepoTags']:
                 print t
                 repotag = "".join(t)
-                data = repotag.split(':')
+                tag = repotag.split(":")[-1]
+                repo = repotag.replace(":%s" %tag, "")
+                data.append(repo)
+                data.append(tag)
                 data.append(i['Id'][:12])
                 data.append(datetime_format(i['Created']))
                 data.append(mem_format(i['VirtualSize']))
@@ -84,7 +88,7 @@ class DOCKER(Client):
             redata['name'] = container['Names'][0][1::]
             redata['id'] = container['Id'][:12]
             if len(container['Image']) == 64:
-                redata['image'] = container['Image'][:13]
+                redata['image'] = container['Image'][:12]
             else:
                 redata['image'] = container['Image']
             redata['created'] = datetime_format(container['Created'])
