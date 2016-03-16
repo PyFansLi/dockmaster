@@ -83,7 +83,10 @@ class DOCKER(Client):
             redata = {}
             redata['name'] = container['Names'][0][1::]
             redata['id'] = container['Id'][:12]
-            redata['image'] = container['Image']
+            if len(container['Image']) == 64:
+                redata['image'] = container['Image'][:13]
+            else:
+                redata['image'] = container['Image']
             redata['created'] = datetime_format(container['Created'])
             redata['status'] = container['Status']
             result.append(redata)
