@@ -31,10 +31,9 @@ class DOCKER(Client):
     def get_images(self):
         imgs = self.images()
         image_list = []
-        data = []
         for i in imgs:
             for t in i['RepoTags']:
-                print t
+                data = []
                 repotag = "".join(t)
                 tag = repotag.split(":")[-1]
                 repo = repotag.replace(":%s" %tag, "")
