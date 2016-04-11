@@ -12,5 +12,7 @@ EXPOSE 8080
 
 WORKDIR /webapp
 
+RUN chmod u+x "entry.sh"
+
 ENTRYPOINT ["./entry.sh"]
 
