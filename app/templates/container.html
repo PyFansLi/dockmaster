@@ -149,7 +149,7 @@
 <script type="text/javascript">
     ;$(function(){
         $("table").DataTable();
-        $("tbody>tr>td>button").click(function(){
+        $(document).on('click', 'tbody>tr>td>button', function() {
             var id = $(this).parents("tr").children("td:nth-child(3)").text();
             var wait = "<h1 style='text-align: center;color:#ecf0f1;'><span class='glyphicon glyphicon-stats'></span>获取详细信息</h1>"
             $("#show").html(wait);
@@ -158,7 +158,7 @@
             });
         });
 
-        $(".dropdown-menu li>a").click(function(){
+        $(document).on('click', 'tbody>tr>td>.btn-group>.dropdown-menu li>a', function() {
             var action = $(this).attr("value");
             var action_zh = $(this).text()
             var id = $(this).parents("tr").children("td:nth-child(3)").text();

@@ -162,7 +162,7 @@
 <script type="text/javascript">
     ;$(function(){
         $("table").DataTable();
-        $("tbody>tr>td>button").click(function(){
+        $(document).on('click', 'tbody>tr>td>button', function() {
             var action = $(this).val();
             var repo = $(this).parents("tr").children("td:nth-child(1)").text();
             var tag = $(this).parents("tr").children("td:nth-child(2)").text();
