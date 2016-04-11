@@ -161,14 +161,13 @@ class DOCKER(Client):
 
     def store_usage(self):
         DriverStatus = self.info()['DriverStatus']
+        used = 0
+        free = 0
         for i in DriverStatus:
             if "Data Space Used" in i[0]:
                 used = float(i[1].replace("GB",""))
             elif 'Data Space Available' in i[0]:
                 free = float(i[1].replace("GB",""))
-            else:
-                used = 0
-                free = 0
         return {"used":used, "free":free}
 
     def get_all_stats(self):
