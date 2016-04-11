@@ -19,6 +19,13 @@
 docker run -d -p 8080:8080 -e DBUSER="dbuser" -e DBPASS="dbpass" -e DBHOST="dbhost" -e DBPORT="dbport" -e DBNAME="dbname" lioncui/dockmaster
 ```
 
+>自行构建镜像
+```
+git clone https://github.com/lioncui/dockmaster
+cd dockmaster
+docker build -t dockmaster .
+```
+
 ##特别感谢
 >感谢同事老谭的支持,教会了我jquery使用,ajax异步调用,前端页面数据的处理
 
