@@ -66,9 +66,8 @@ def engine():
                 base_url = "tcp://" + engine.host + ":" + engine.port
                 docker = DOCKER(base_url = base_url, timeout = 5, version = "auto")
                 return render_template('engine.html', host_info = docker.get_info(), usage = docker.monitor())
-            except:
-                return "操作失败,服务无法完成你的请求", 503
-
+            except Exception as msg:
+                return str(msg), 503
         else:
             return "Error 401, Authentication failed", 401
     else:
@@ -85,8 +84,8 @@ def image():
                 base_url = "tcp://" + engine.host + ":" + engine.port
                 docker = DOCKER(base_url = base_url, timeout = 5, version = "auto")
                 return render_template('image.html', image_list = docker.get_images())
-            except:
-                return "操作失败,服务无法完成你的请求", 503
+            except Exception as msg:
+                return str(msg), 503
         else:
             return "Error 401, Authentication failed", 401
     else:
@@ -103,8 +102,8 @@ def container():
                 base_url = "tcp://" + engine.host + ":" + engine.port
                 docker = DOCKER(base_url = base_url, timeout = 5, version = "auto")
                 return render_template('container.html', container_list = docker.get_containers())
-            except:
-                return "操作失败,服务无法完成你的请求", 503
+            except Exception as msg:
+                return str(msg), 503
         else:
             return "Error 401, Authentication failed", 401
     else:

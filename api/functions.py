@@ -71,8 +71,8 @@ def _add_host():
                                             user = auth)
                     db.session.add(newhost)
                     db.session.commit()
-                except:
-                    return "操作失败,服务无法完成你的请求", 503
+                except Exception as msg:
+                    return str(msg), 503
                 finally:
                     db.session.close()
         return redirect('/overview')
