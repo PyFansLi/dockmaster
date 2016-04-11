@@ -41,7 +41,7 @@
 </ul>
 <div style="padding-top:20px;">
     <button class="hide" data-toggle="modal" data-target="#action_select"></button>
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered" id="data-table">
     <thead>
         <tr>  
             <th>NAME</th>
@@ -149,7 +149,7 @@
 <script type="text/javascript">
     ;$(function(){
         $("table").DataTable();
-        $(document).on('click', 'tbody>tr>td>button', function() {
+        $("#data-table").on('click', 'tbody>tr>td>button', function() {
             var id = $(this).parents("tr").children("td:nth-child(3)").text();
             var wait = "<h1 style='text-align: center;color:#ecf0f1;'><span class='glyphicon glyphicon-stats'></span>获取详细信息</h1>"
             $("#show").html(wait);
@@ -158,7 +158,7 @@
             });
         });
 
-        $(document).on('click', 'tbody>tr>td>.btn-group>.dropdown-menu li>a', function() {
+        $("#data-table").on('click', 'tbody>tr>td>.btn-group>.dropdown-menu li>a', function() {
             var action = $(this).attr("value");
             var action_zh = $(this).text()
             var id = $(this).parents("tr").children("td:nth-child(3)").text();

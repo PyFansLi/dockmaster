@@ -40,7 +40,7 @@
     <li>
 </ul>
 <div style="padding-top:20px;">
-    <table class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <table class="table table-striped table-bordered" cellspacing="0" width="100%" id="data-table">
     <thead>
         <tr>
         <th>REPOSITORY</th>
@@ -162,7 +162,7 @@
 <script type="text/javascript">
     ;$(function(){
         $("table").DataTable();
-        $(document).on('click', 'tbody>tr>td>button', function() {
+        $("#data-table").on('click', 'tbody>tr>td>button', function() {
             var action = $(this).val();
             var repo = $(this).parents("tr").children("td:nth-child(1)").text();
             var tag = $(this).parents("tr").children("td:nth-child(2)").text();
