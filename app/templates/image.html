@@ -174,8 +174,14 @@
             }
             else if(action == "delete"){
                 var h4 = "是否删除镜像:" + repotag;
-                $("h4").text(h4);
-                $("#del_repotag").val(repotag)
+                if(repotag != "<none>:<none>"){
+                    $("h4").text(h4);
+                    $("#del_repotag").val(repotag)
+                }
+                else {
+                    $("h4").text(h4);
+                    $("#del_repotag").val(image_id)
+                }
             };
         });
     });
