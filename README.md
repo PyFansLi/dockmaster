@@ -14,7 +14,8 @@
 >完全免费,完全开源,支持容器方式运行,包含完整Dockerfile  
 
 ##运行方式
->直接运行容器,启动时加入mysql的配置,具体配置请以实际为准
+>直接运行容器,启动时需要连接mysql数据库  
+>run命令加入-e 参数指定mysql的配置,具体配置请以你的实际环境为准
 ```
 docker run -d -p 8080:8080 -e DBUSER="dbuser" -e DBPASS="dbpass" -e DBHOST="dbhost" -e DBPORT="dbport" -e DBNAME="dbname" lioncui/dockmaster
 ```
